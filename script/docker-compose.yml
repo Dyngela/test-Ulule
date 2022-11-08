@@ -1,0 +1,19 @@
+services:
+  postgres:
+    container_name: postgres
+    build:
+      context: ./db
+    healthcheck:
+      test: /postgres.sh
+      interval: "5s"
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
+      PGDATA: /data/postgres
+      TZ: Europe/Paris
+    ports:
+      - ${POSTGRES_PORT:-5432}:5432
+
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4
