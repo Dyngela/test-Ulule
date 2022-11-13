@@ -4,27 +4,34 @@ import (
 	"Ulule/src/DTO"
 	"Ulule/src/utils"
 	"context"
-	"fmt"
 	"github.com/georgysavva/scany/v2/pgxscan"
 	"time"
 )
 
-func FindContributionByDateByProject(dates string, projectId int) ([]DTO.ContributionByDateByProject, error) {
+func FindContributionByDateByProject(dateStart time.Time, dateRange int, projectId int) ([]DTO.ContributionByDateByProject, error) {
 	conn, err := utils.Pool.Acquire(context.Background())
 	defer conn.Release()
 	if err != nil {
 		return []DTO.ContributionByDateByProject{}, err
 	}
-	// I used Sprintf here instead of a query parameter because it was not working when i tried it with several dates
-	// TODO Find out why it doesn't work that way. Scany limitation?
-	query := fmt.Sprintf(
-		`select sum(c.amount) as amount, c.created_at, p.name from project p
-				inner join contribution c on c.project_id = p.id
-				where p.id = $1 and c.created_at in ('%s')
-				group by c.created_at, p.name
-				order by created_at desc`, dates)
+	query := `select date_trunc('day', days)::date as created_at, n.amount as amount, n.name
+				from generate_series
+						 ( (select min(created_at) from contribution)
+						 , (select max(created_at) from contribution
+							where  project_id = $1
+							  and created_at <= $2
+						   ), '1 day'::interval) days
+						 left outer join
+					 ( select sum(amount) as amount,created_at as min_created_at, p.name
+					   from contribution
+								inner join project p on contribution.project_id = p.id
+					   group by p.name, created_at
+					 ) n
+					 on date_trunc('day', days)::date = n.min_created_at
+				order by created_at desc
+				limit $3;`
 	var resp []DTO.ContributionByDateByProject
-	err = pgxscan.Select(context.Background(), conn, &resp, query, projectId)
+	err = pgxscan.Select(context.Background(), conn, &resp, query, projectId, dateStart, dateRange)
 	if err != nil {
 		return []DTO.ContributionByDateByProject{}, err
 	}
@@ -34,35 +41,33 @@ func FindContributionByDateByProject(dates string, projectId int) ([]DTO.Contrib
 	return resp, nil
 }
 
-func FindNewContributorByDateByProject(dates []string, projectId int) ([]DTO.NewContributorByDateByProject, error) {
+func FindNewContributorByDateByProject(startDate time.Time, dateRange int, projectId int) ([]DTO.NewContributorByDateByProject, error) {
 	conn, err := utils.Pool.Acquire(context.Background())
 	defer conn.Release()
 	if err != nil {
 		return []DTO.NewContributorByDateByProject{}, err
 	}
-
 	var resp []DTO.NewContributorByDateByProject
-	var tempResp DTO.NewContributorByDateByProject
-	for i := 0; i < len(dates); i++ {
+	query := `select date_trunc('day', days)::date as created_at, count(n.user_id) as contributors, n.name
+				from generate_series
+						 ( (select min(created_at) from contribution)
+						 , (select max(created_at) from contribution
+							where  project_id = $1
+							  and created_at <= $2
+						   ), '1 day'::interval) days
+						 left outer join
+					 ( select user_id, min(created_at) as min_created_at, p.name
+					   from contribution
+						inner join project p on contribution.project_id = p.id
+					   group by user_id, p.name
+					 ) n
+					 on date_trunc('day', days)::date = n.min_created_at
+				
+				group by created_at, n.name
+				order by created_at desc
+				limit $3;`
 
-		tempDate, parseError := time.Parse("2006-01-02", dates[i])
-		if parseError != nil {
-			return []DTO.NewContributorByDateByProject{}, parseError
-		}
-		tempDate.AddDate(0, 0, i*-1)
-		date := tempDate.Format("2006-01-02")
-		query := fmt.Sprintf(`select distinct count(c.user_id) as contributors, c.created_at, p.name from project p
-				inner join contribution c on c.project_id = p.id
-				where user_id not in
-					  (select user_id from contribution
-									  where created_at < '%s' and project_id = $1)
-				and project_id = $2
-				and amount > 0
-				and created_at = '%s'
-				group by c.created_at, p.name;`, date, date)
-		err = pgxscan.Get(context.Background(), conn, &tempResp, query, projectId, projectId)
-		resp = append(resp, tempResp)
-	}
+	err = pgxscan.Select(context.Background(), conn, &resp, query, projectId, startDate, dateRange)
 	if err != nil {
 		return []DTO.NewContributorByDateByProject{}, err
 	}
@@ -72,27 +77,91 @@ func FindNewContributorByDateByProject(dates []string, projectId int) ([]DTO.New
 	return resp, nil
 }
 
-func FindNewContributionByDateByProject(dates string, projectId int) ([]DTO.NewContributionByDateByProject, error) {
+func FindNewContributionByDateByProject(startDate time.Time, dateRange int, projectId int) ([]DTO.NewContributionByDateByProject, error) {
 	conn, err := utils.Pool.Acquire(context.Background())
 	defer conn.Release()
 	if err != nil {
 		return []DTO.NewContributionByDateByProject{}, err
 	}
-	query := fmt.Sprintf(
-		`select distinct count(c.amount) as contributions, c.created_at, p.name from project p
-				inner join contribution c on c.project_id = p.id
-				where project_id = $1
-				and c.amount > 0
-				and c.created_at in ('%s')
-				group by c.created_at, p.name
-				order by c.created_at desc;`, dates)
+	query := `select date_trunc('day', days)::date as created_at, n.counter as contributions, n.name
+				from generate_series
+						 ( (select min(created_at) from contribution),
+							(select max(created_at) from contribution
+							where  project_id = $1
+							  and created_at <= $2
+						   ), '1 day'::interval) days
+						 left outer join
+					 ( select count(amount) as counter, created_at as min_created_at, p.name
+					   from contribution
+						inner join project p on contribution.project_id = p.id
+					   group by created_at, p.name
+					 ) n
+					 on date_trunc('day', days)::date = n.min_created_at
+				
+				group by created_at, n.name, n.counter
+				order by created_at desc
+				limit $3;`
 	var resp []DTO.NewContributionByDateByProject
-	err = pgxscan.Select(context.Background(), conn, &resp, query, projectId)
+	err = pgxscan.Select(context.Background(), conn, &resp, query, projectId, startDate, dateRange)
 	if err != nil {
 		return []DTO.NewContributionByDateByProject{}, err
 	}
 	if resp == nil {
 		return []DTO.NewContributionByDateByProject{}, err
+	}
+	return resp, nil
+}
+
+func FindAverageContributionAmount(projectId int) (DTO.AverageContributionByProject, error) {
+	conn, err := utils.Pool.Acquire(context.Background())
+	defer conn.Release()
+	if err != nil {
+		return DTO.AverageContributionByProject{}, err
+	}
+	query := `select ROUND(avg(c.amount),2) as average, p.name as name from contribution c
+				inner join project p on p.id = c.project_id
+				where project_id = $1
+				group by p.name;`
+	var resp DTO.AverageContributionByProject
+	err = pgxscan.Get(context.Background(), conn, &resp, query, projectId)
+	if err != nil {
+		return DTO.AverageContributionByProject{}, err
+	}
+	return resp, nil
+}
+
+func FindContributionRateByVisitorsByDateByProject(startDate time.Time, dateRange int, projectId int) ([]DTO.ContributionRateByVisitorsByDateByProject, error) {
+	conn, err := utils.Pool.Acquire(context.Background())
+	defer conn.Release()
+	if err != nil {
+		return []DTO.ContributionRateByVisitorsByDateByProject{}, err
+	}
+	query := `select date_trunc('day', days)::date as date, n.name, ROUND((cast(n.counter as decimal)/ n.visitors * 100),2) as rate
+				from generate_series
+						 ( (select min(date) from visit),
+						   (select max(date) from visit
+							where date <= $1
+						   ), '1 day'::interval) days
+						 left outer join
+					 ( select count(c.id) as counter, created_at as min_created_at, p.name, v.visitors
+					   from visit v
+					   inner join contribution c on v.project_id = c.project_id and v.date = c.created_at
+					   inner join project p on c.project_id = p.id
+					   where p.id = $2
+					   group by created_at, p.name, v.visitors
+					 ) n
+					 on date_trunc('day', days)::date = n.min_created_at
+				
+				group by date, n.name, n.counter, n.visitors
+				order by date desc
+				limit $3;`
+	var resp []DTO.ContributionRateByVisitorsByDateByProject
+	err = pgxscan.Select(context.Background(), conn, &resp, query, startDate, projectId, dateRange)
+	if err != nil {
+		return []DTO.ContributionRateByVisitorsByDateByProject{}, err
+	}
+	if resp == nil {
+		return []DTO.ContributionRateByVisitorsByDateByProject{}, err
 	}
 	return resp, nil
 }

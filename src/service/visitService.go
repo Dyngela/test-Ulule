@@ -8,25 +8,7 @@ import (
 	"time"
 )
 
-func GetProjectMilestones(c *gin.Context) {
-	type URI struct {
-		ProjectId int `binding:"gte=1" uri:"id"`
-	}
-	uri := URI{}
-	if err := c.ShouldBindUri(&uri); err != nil {
-		exception.ThrowExceptionBadArgument(c, err)
-		return
-	}
-
-	response, err := repository.FindProjectMilestones(uri.ProjectId)
-	if err != nil {
-		exception.ThrowExceptionSQLError(c, err, response)
-		return
-	}
-	c.JSON(http.StatusOK, response)
-}
-
-func GetAdvancementPercentage(c *gin.Context) {
+func GetVisitsByProjectByDate(c *gin.Context) {
 	type URI struct {
 		Date      time.Time `binding:"required" uri:"date" time_format:"2006-01-02"`
 		ProjectId int       `binding:"gte=1" uri:"id"`
@@ -38,7 +20,7 @@ func GetAdvancementPercentage(c *gin.Context) {
 		return
 	}
 
-	response, err := repository.FindAdvancementPercentage(
+	response, err := repository.FindNumberOfVisitsByDateByProject(
 		uri.Date,
 		uri.DateRange,
 		uri.ProjectId)

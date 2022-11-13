@@ -21,10 +21,11 @@ func ThrowExceptionBadArgument(c *gin.Context, err error) {
 	log.Println(err)
 }
 
-func ThrowExceptionSQLError(c *gin.Context, err error) {
+func ThrowExceptionSQLError(c *gin.Context, err error, resp any) {
 	c.JSON(http.StatusInternalServerError, gin.H{
 		"status": http.StatusInternalServerError,
 		"error":  "We could not execute your query",
+		"data":   resp,
 	})
 	log.Println(err)
 }

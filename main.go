@@ -17,6 +17,8 @@ func init() {
 	err := router.SetTrustedProxies([]string{"127.0.0.1"})
 	exception.CheckErrors(err, "error while setting up trusted proxy")
 	controller.ContributionController(router)
+	controller.VisitController(router)
+	controller.ProjectController(router)
 	err = router.Run(port)
 	exception.CheckErrors(err, "error while running")
 
