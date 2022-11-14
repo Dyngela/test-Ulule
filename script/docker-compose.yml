@@ -1,19 +1,12 @@
 services:
-  postgres:
-    container_name: postgres
+  app:
     build:
-      context: ./db
-    healthcheck:
-      test: /postgres.sh
-      interval: "5s"
+      context: ../.
+      args:
+        BUILD_ARGS: ""
+        GO_MAIN: "/Ulule"
+    container_name: Ulule-test
+    restart: always
     environment:
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASS}
-      PGDATA: /data/postgres
-      TZ: Europe/Paris
-    ports:
-      - ${POSTGRES_PORT:-5432}:5432
-
-  pgadmin:
-    container_name: pgadmin
-    image: dpage/pgadmin4
+      DSN: "postgres://${DB_USER}:${DB_PASSWORD}@127.0.0.1:${DB_PORT}/${DB_NAME}"
+      APP_PORT: "${APP_PORT}"

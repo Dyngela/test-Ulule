@@ -16,6 +16,13 @@ func init() {
 	gin.SetMode(gin.ReleaseMode)
 	gin.ForceConsoleColor()
 	utils.ConnectToPostgres()
+}
+
+// @title Ulule TP API documentation
+// @version 1.0.0
+// @host localhost:8080
+// @BasePath /api/v1
+func main() {
 	router := gin.Default()
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	err := router.SetTrustedProxies([]string{"127.0.0.1"})
@@ -24,13 +31,6 @@ func init() {
 	controller.VisitController(router)
 	controller.ProjectController(router)
 	err = router.Run(port)
+	//err = router.Run(os.Getenv("APP_PORT"))
 	exception.CheckErrors(err, "error while running")
-
-}
-
-// @title Ulule TP API documentation
-// @version 1.0.0
-// @host localhost:8080
-// @BasePath /api/v1
-func main() {
 }
