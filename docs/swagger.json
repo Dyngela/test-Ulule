@@ -1,0 +1,588 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "Ulule TP API documentation",
+        "contact": {},
+        "version": "1.0.0"
+    },
+    "host": "localhost:8080",
+    "basePath": "/api/v1",
+    "paths": {
+        "/advancement/percentage/project/{id}/date/{date}/range/{range}": {
+            "get": {
+                "description": "Give an array containing the percentage of advancement for a given day",
+                "tags": [
+                    "Project"
+                ],
+                "summary": "Get each day specified and send back the percentage reach each day.",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Project's ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Last date of the response with the format YYYY-MM-DD",
+                        "name": "date",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "On how many day you want before the given date",
+                        "name": "range",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/DTO.ProjectMilestone"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "object"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "object"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/contribution/amount/project/{id}/date/{date}/range/{range}": {
+            "get": {
+                "description": "Give an array containing the percentage of advancement for a given day",
+                "tags": [
+                    "Contribution"
+                ],
+                "summary": "Get each day specified and send back the sum of the contributions for that day",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Project's ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Last date of the response with the format YYYY-MM-DD",
+                        "name": "date",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "On how many day you want before the given date",
+                        "name": "range",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/DTO.ContributionByDateByProject"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "object"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "object"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/contribution/average/contribution/project/{id}": {
+            "get": {
+                "description": "Get the average of the contribution for a given project",
+                "tags": [
+                    "Contribution"
+                ],
+                "summary": "Get the average of the contribution for a given project",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Project's ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Last date of the response with the format YYYY-MM-DD",
+                        "name": "date",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "On how many day you want before the given date",
+                        "name": "range",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/DTO.AverageContributionByProject"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                }
+            }
+        },
+        "/contribution/contributions/project/{id}/date/{date}/range/{range}": {
+            "get": {
+                "description": "Give an array containing the count of new contribution for a given day",
+                "tags": [
+                    "Contribution"
+                ],
+                "summary": "Get each day specified and send back the count of new contributions for that day",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Project's ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Last date of the response with the format YYYY-MM-DD",
+                        "name": "date",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "On how many day you want before the given date",
+                        "name": "range",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/DTO.NewContributionByDateByProject"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "object"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "object"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/contribution/contributors/project/{id}/date/{date}/range/{range}": {
+            "get": {
+                "description": "Give an array containing the count of new contributor for a given day",
+                "tags": [
+                    "Contribution"
+                ],
+                "summary": "Get each day specified and send back the count of new contributor for that day",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Project's ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Last date of the response with the format YYYY-MM-DD",
+                        "name": "date",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "On how many day you want before the given date",
+                        "name": "range",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/DTO.NewContributorByDateByProject"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "object"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "object"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/contribution/rate/visitor/project/{id}/date/{date}/range/{range}": {
+            "get": {
+                "description": "Give an array containing the contribution rate for a given day and a given project",
+                "tags": [
+                    "Contribution"
+                ],
+                "summary": "Get each day specified and send back the rate between visitor and contribution",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Project's ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Last date of the response with the format YYYY-MM-DD",
+                        "name": "date",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "On how many day you want before the given date",
+                        "name": "range",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/DTO.ContributionRateByVisitorsByDateByProject"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "object"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "object"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/project/milestones/project/{id}": {
+            "get": {
+                "description": "Give the contribution ID, the date and the slice completed of a project objective.",
+                "tags": [
+                    "Project"
+                ],
+                "summary": "Get each milestone from a project, since first contribution to 100% completion",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Project's ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/DTO.ProjectMilestone"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "object"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "object"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/visit/visits/project/{id}/date/{date}/range/{range}": {
+            "get": {
+                "description": "Get the number of visitor on a range of date for a given project",
+                "tags": [
+                    "Visit"
+                ],
+                "summary": "Get the number of visitor",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Project's ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Last date of the response with the format YYYY-MM-DD",
+                        "name": "date",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "On how many day you want before the given date",
+                        "name": "range",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/DTO.VisitByDateByProject"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "object"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "object"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "DTO.AverageContributionByProject": {
+            "type": "object",
+            "properties": {
+                "amount": {
+                    "type": "number"
+                },
+                "project": {
+                    "type": "string"
+                }
+            }
+        },
+        "DTO.ContributionByDateByProject": {
+            "type": "object",
+            "properties": {
+                "amount": {
+                    "type": "number"
+                },
+                "date": {
+                    "$ref": "#/definitions/pgtype.Date"
+                },
+                "project": {
+                    "type": "string"
+                }
+            }
+        },
+        "DTO.ContributionRateByVisitorsByDateByProject": {
+            "type": "object",
+            "properties": {
+                "date": {
+                    "$ref": "#/definitions/pgtype.Date"
+                },
+                "project": {
+                    "type": "string"
+                },
+                "rate": {
+                    "type": "number"
+                }
+            }
+        },
+        "DTO.NewContributionByDateByProject": {
+            "type": "object",
+            "properties": {
+                "contributions": {
+                    "type": "integer"
+                },
+                "date": {
+                    "$ref": "#/definitions/pgtype.Date"
+                },
+                "project": {
+                    "type": "string"
+                }
+            }
+        },
+        "DTO.NewContributorByDateByProject": {
+            "type": "object",
+            "properties": {
+                "contributors": {
+                    "type": "integer"
+                },
+                "date": {
+                    "$ref": "#/definitions/pgtype.Date"
+                },
+                "project": {
+                    "type": "string"
+                }
+            }
+        },
+        "DTO.ProjectMilestone": {
+            "type": "object",
+            "properties": {
+                "contributionId": {
+                    "type": "integer"
+                },
+                "date": {
+                    "$ref": "#/definitions/pgtype.Date"
+                },
+                "slice": {
+                    "type": "string"
+                }
+            }
+        },
+        "DTO.VisitByDateByProject": {
+            "type": "object",
+            "properties": {
+                "date": {
+                    "$ref": "#/definitions/pgtype.Date"
+                },
+                "project": {
+                    "type": "string"
+                },
+                "visits": {
+                    "type": "number"
+                }
+            }
+        },
+        "pgtype.Date": {
+            "type": "object",
+            "properties": {
+                "infinityModifier": {
+                    "type": "integer"
+                },
+                "time": {
+                    "type": "string"
+                },
+                "valid": {
+                    "type": "boolean"
+                }
+            }
+        }
+    }
+}

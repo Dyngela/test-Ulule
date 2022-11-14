@@ -5,6 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// ContributionController Every API routes mainly related to Contribution table
 func ContributionController(router *gin.Engine) {
 	v1 := router.Group("/api/v1/contribution/")
 	{
@@ -12,6 +13,6 @@ func ContributionController(router *gin.Engine) {
 		v1.GET("contributors/project/:id/date/:date/range/:range", service.GetNewContributorByDateByProject)
 		v1.GET("contributions/project/:id/date/:date/range/:range", service.GetNewContributionByDateByProject)
 		v1.GET("average/contribution/project/:id", service.GetAverageContributionAmount)
-		v1.GET("rate/visistor/project/:id/date/:date/range/:range", service.GetContributionRateByVisitorsByDateByProject)
+		v1.GET("rate/visitor/project/:id/date/:date/range/:range", service.GetContributionRateByVisitorsByDateByProject)
 	}
 }

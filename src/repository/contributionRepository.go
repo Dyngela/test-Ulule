@@ -8,6 +8,7 @@ import (
 	"time"
 )
 
+// FindContributionByDateByProject Database request to get the sum of the contributions each day on a range of date for a given project
 func FindContributionByDateByProject(dateStart time.Time, dateRange int, projectId int) ([]DTO.ContributionByDateByProject, error) {
 	conn, err := utils.Pool.Acquire(context.Background())
 	defer conn.Release()
@@ -41,6 +42,7 @@ func FindContributionByDateByProject(dateStart time.Time, dateRange int, project
 	return resp, nil
 }
 
+// FindNewContributorByDateByProject Database request to get the count of new contributors each day on a range of date for a given project
 func FindNewContributorByDateByProject(startDate time.Time, dateRange int, projectId int) ([]DTO.NewContributorByDateByProject, error) {
 	conn, err := utils.Pool.Acquire(context.Background())
 	defer conn.Release()
@@ -77,6 +79,7 @@ func FindNewContributorByDateByProject(startDate time.Time, dateRange int, proje
 	return resp, nil
 }
 
+// FindNewContributionByDateByProject Database request to get the count of new contributions each day on a range of date for a given project
 func FindNewContributionByDateByProject(startDate time.Time, dateRange int, projectId int) ([]DTO.NewContributionByDateByProject, error) {
 	conn, err := utils.Pool.Acquire(context.Background())
 	defer conn.Release()
@@ -112,6 +115,7 @@ func FindNewContributionByDateByProject(startDate time.Time, dateRange int, proj
 	return resp, nil
 }
 
+// FindAverageContributionAmount Database request to get the average of the contribution for a given project
 func FindAverageContributionAmount(projectId int) (DTO.AverageContributionByProject, error) {
 	conn, err := utils.Pool.Acquire(context.Background())
 	defer conn.Release()
@@ -130,6 +134,8 @@ func FindAverageContributionAmount(projectId int) (DTO.AverageContributionByProj
 	return resp, nil
 }
 
+// FindContributionRateByVisitorsByDateByProject Database request to get the rate of contribution according to the number of visitors
+// on a range of date for a given project
 func FindContributionRateByVisitorsByDateByProject(startDate time.Time, dateRange int, projectId int) ([]DTO.ContributionRateByVisitorsByDateByProject, error) {
 	conn, err := utils.Pool.Acquire(context.Background())
 	defer conn.Release()
@@ -143,11 +149,11 @@ func FindContributionRateByVisitorsByDateByProject(startDate time.Time, dateRang
 							where date <= $1
 						   ), '1 day'::interval) days
 						 left outer join
-					 ( select count(c.id) as counter, created_at as min_created_at, p.name, v.visitors
+					 ( select distinct count(c.amount) as counter, created_at as min_created_at, p.name, v.visitors
 					   from visit v
 					   inner join contribution c on v.project_id = c.project_id and v.date = c.created_at
 					   inner join project p on c.project_id = p.id
-					   where p.id = $2
+					   where p.id = $2 and c.amount > 0
 					   group by created_at, p.name, v.visitors
 					 ) n
 					 on date_trunc('day', days)::date = n.min_created_at

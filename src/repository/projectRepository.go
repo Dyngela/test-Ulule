@@ -8,6 +8,8 @@ import (
 	"time"
 )
 
+// FindProjectMilestones Database request to get project's milestone e.g first contribution, 10% completion, 20%  completion etc..
+// for a range of date for a given project
 func FindProjectMilestones(projectId int) ([]DTO.ProjectMilestone, error) {
 	conn, err := utils.Pool.Acquire(context.Background())
 	defer conn.Release()
@@ -48,6 +50,7 @@ func FindProjectMilestones(projectId int) ([]DTO.ProjectMilestone, error) {
 	return resp, nil
 }
 
+// FindAdvancementPercentage Database request to get the objective's completion in percentage for a range of date for a given project
 func FindAdvancementPercentage(dateStart time.Time, dateRange int, projectId int) ([]DTO.ProjectAdvancement, error) {
 	conn, err := utils.Pool.Acquire(context.Background())
 	defer conn.Release()

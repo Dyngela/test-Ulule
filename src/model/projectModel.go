@@ -4,6 +4,7 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
+// Project Database's model
 type Project struct {
 	Id               uint64
 	Name             string

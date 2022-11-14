@@ -1,0 +1,401 @@
+basePath: /api/v1
+definitions:
+  DTO.AverageContributionByProject:
+    properties:
+      amount:
+        type: number
+      project:
+        type: string
+    type: object
+  DTO.ContributionByDateByProject:
+    properties:
+      amount:
+        type: number
+      date:
+        $ref: '#/definitions/pgtype.Date'
+      project:
+        type: string
+    type: object
+  DTO.ContributionRateByVisitorsByDateByProject:
+    properties:
+      date:
+        $ref: '#/definitions/pgtype.Date'
+      project:
+        type: string
+      rate:
+        type: number
+    type: object
+  DTO.NewContributionByDateByProject:
+    properties:
+      contributions:
+        type: integer
+      date:
+        $ref: '#/definitions/pgtype.Date'
+      project:
+        type: string
+    type: object
+  DTO.NewContributorByDateByProject:
+    properties:
+      contributors:
+        type: integer
+      date:
+        $ref: '#/definitions/pgtype.Date'
+      project:
+        type: string
+    type: object
+  DTO.ProjectMilestone:
+    properties:
+      contributionId:
+        type: integer
+      date:
+        $ref: '#/definitions/pgtype.Date'
+      slice:
+        type: string
+    type: object
+  DTO.VisitByDateByProject:
+    properties:
+      date:
+        $ref: '#/definitions/pgtype.Date'
+      project:
+        type: string
+      visits:
+        type: number
+    type: object
+  pgtype.Date:
+    properties:
+      infinityModifier:
+        type: integer
+      time:
+        type: string
+      valid:
+        type: boolean
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  title: Ulule TP API documentation
+  version: 1.0.0
+paths:
+  /advancement/percentage/project/{id}/date/{date}/range/{range}:
+    get:
+      description: Give an array containing the percentage of advancement for a given
+        day
+      parameters:
+      - description: Project's ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Last date of the response with the format YYYY-MM-DD
+        in: path
+        name: date
+        required: true
+        type: string
+      - description: On how many day you want before the given date
+        in: path
+        name: range
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/DTO.ProjectMilestone'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: object
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            items:
+              type: object
+            type: array
+      summary: Get each day specified and send back the percentage reach each day.
+      tags:
+      - Project
+  /contribution/amount/project/{id}/date/{date}/range/{range}:
+    get:
+      description: Give an array containing the percentage of advancement for a given
+        day
+      parameters:
+      - description: Project's ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Last date of the response with the format YYYY-MM-DD
+        in: path
+        name: date
+        required: true
+        type: string
+      - description: On how many day you want before the given date
+        in: path
+        name: range
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/DTO.ContributionByDateByProject'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: object
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            items:
+              type: object
+            type: array
+      summary: Get each day specified and send back the sum of the contributions for
+        that day
+      tags:
+      - Contribution
+  /contribution/average/contribution/project/{id}:
+    get:
+      description: Get the average of the contribution for a given project
+      parameters:
+      - description: Project's ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Last date of the response with the format YYYY-MM-DD
+        in: path
+        name: date
+        required: true
+        type: string
+      - description: On how many day you want before the given date
+        in: path
+        name: range
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/DTO.AverageContributionByProject'
+        "400":
+          description: Bad Request
+          schema:
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            type: object
+      summary: Get the average of the contribution for a given project
+      tags:
+      - Contribution
+  /contribution/contributions/project/{id}/date/{date}/range/{range}:
+    get:
+      description: Give an array containing the count of new contribution for a given
+        day
+      parameters:
+      - description: Project's ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Last date of the response with the format YYYY-MM-DD
+        in: path
+        name: date
+        required: true
+        type: string
+      - description: On how many day you want before the given date
+        in: path
+        name: range
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/DTO.NewContributionByDateByProject'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: object
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            items:
+              type: object
+            type: array
+      summary: Get each day specified and send back the count of new contributions
+        for that day
+      tags:
+      - Contribution
+  /contribution/contributors/project/{id}/date/{date}/range/{range}:
+    get:
+      description: Give an array containing the count of new contributor for a given
+        day
+      parameters:
+      - description: Project's ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Last date of the response with the format YYYY-MM-DD
+        in: path
+        name: date
+        required: true
+        type: string
+      - description: On how many day you want before the given date
+        in: path
+        name: range
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/DTO.NewContributorByDateByProject'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: object
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            items:
+              type: object
+            type: array
+      summary: Get each day specified and send back the count of new contributor for
+        that day
+      tags:
+      - Contribution
+  /contribution/rate/visitor/project/{id}/date/{date}/range/{range}:
+    get:
+      description: Give an array containing the contribution rate for a given day
+        and a given project
+      parameters:
+      - description: Project's ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Last date of the response with the format YYYY-MM-DD
+        in: path
+        name: date
+        required: true
+        type: string
+      - description: On how many day you want before the given date
+        in: path
+        name: range
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/DTO.ContributionRateByVisitorsByDateByProject'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: object
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            items:
+              type: object
+            type: array
+      summary: Get each day specified and send back the rate between visitor and contribution
+      tags:
+      - Contribution
+  /project/milestones/project/{id}:
+    get:
+      description: Give the contribution ID, the date and the slice completed of a
+        project objective.
+      parameters:
+      - description: Project's ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/DTO.ProjectMilestone'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: object
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            items:
+              type: object
+            type: array
+      summary: Get each milestone from a project, since first contribution to 100%
+        completion
+      tags:
+      - Project
+  /visit/visits/project/{id}/date/{date}/range/{range}:
+    get:
+      description: Get the number of visitor on a range of date for a given project
+      parameters:
+      - description: Project's ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Last date of the response with the format YYYY-MM-DD
+        in: path
+        name: date
+        required: true
+        type: string
+      - description: On how many day you want before the given date
+        in: path
+        name: range
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/DTO.VisitByDateByProject'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: object
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            items:
+              type: object
+            type: array
+      summary: Get the number of visitor
+      tags:
+      - Visit
+swagger: "2.0"

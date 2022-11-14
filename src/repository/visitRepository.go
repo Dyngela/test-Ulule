@@ -8,6 +8,7 @@ import (
 	"time"
 )
 
+// FindNumberOfVisitsByDateByProject Database request to get the number of visits for a range of date for a given project
 func FindNumberOfVisitsByDateByProject(startDate time.Time, dateRange int, projectId int) ([]DTO.VisitByDateByProject, error) {
 	conn, err := utils.Pool.Acquire(context.Background())
 	defer conn.Release()

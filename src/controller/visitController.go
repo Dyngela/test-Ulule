@@ -5,6 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// VisitController Every API routes mainly related to Visit table
 func VisitController(router *gin.Engine) {
 	v1 := router.Group("/api/v1/visit/")
 	{
