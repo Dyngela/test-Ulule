@@ -19,6 +19,7 @@ docker-compose up -d --build
 ```
 Now you need to create an actual database and its tables. You normally have everything needed. 
 Just restore a dump of your data into a .sql file and copy and paste it into script/db/dbinit and the application is ready. 
+You also eventually can change image parameter easily in the .env file as your liking.
 
 ## Test and documentation
 
