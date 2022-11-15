@@ -17,10 +17,9 @@ git clone https://github.com/Dyngela/test-Ulule.git
 cd test-Ulule
 docker-compose up -d --build
 ```
-Now you need to create an actual database and its table. You normally have everything needed. 
-Just restore a dump of your data and the application is ready. 
+Now you need to create an actual database and its tables. You normally have everything needed. 
+Just restore a dump of your data into a .sql file and copy and paste it into script/db/dbinit and the application is ready. 
 
-Now all you need to do is to go 
 ## Test and documentation
 
 The project is documented with comments in code for back-end developer who wish to continue.  
