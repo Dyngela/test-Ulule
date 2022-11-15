@@ -9,28 +9,25 @@ Request come in controller which are associated to a service who treat the reque
 
 ## Installation
 
-The app is available directly with docker:
-```shell
-git clone 
-```
+The go version used is 1.18.
 
-Or you can download source code directly:
+You can download source code directly to build your own image:
 ```shell
 git clone https://github.com/Dyngela/test-Ulule.git
+cd test-Ulule
+docker-compose up -d --build
 ```
-The go version used is 1.18.  
-Before launching the app you need to connect to a database of your own, we use postgres 14 for our development. For that go in script/.env and modify
-environment variable as needed.
+Now you need to create an actual database and its table. You normally have everything needed. 
+Just restore a dump of your data and the application is ready. 
 
+Now all you need to do is to go 
 ## Test and documentation
 
 The project is documented with comments in code for back-end developer who wish to continue.  
 For front-end developer a swagger page is available. Just launch the app with for example port 8080 and go on this link:
-
 ```shell
 http://localhost:8080/swagger/index.html
 ```
-
 You can also import a postman collection if you want to test query already set with argument+: 
 
 ```shell

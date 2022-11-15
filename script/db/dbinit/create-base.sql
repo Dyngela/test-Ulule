@@ -1,4 +1,6 @@
-create table visit (
+CREATE DATABASE ulule ENCODING = 'UTF8' LOCALE = 'en_US.utf8';
+
+create table ulule.visit (
                        id serial not null unique,
                        project_id bigint not null,
                        date date not null,
@@ -8,7 +10,7 @@ create table visit (
                        primary key (id)
 );
 
-create table project (
+create table ulule.project (
                          id serial not null unique,
                          name varchar(255) not null,
                          slug varchar(255),
@@ -20,7 +22,7 @@ create table project (
                          primary key (id)
 );
 
-create table contribution (
+create table ulule.contribution (
                               id serial not null unique,
                               amount numeric not null,
                               user_id bigint not null,
@@ -30,5 +32,5 @@ create table contribution (
                               primary key (id)
 );
 
-alter table visit add foreign key(project_id) references project;
-alter table contribution add foreign key(project_id) references project;
+alter table ulule.visit add foreign key(project_id) references ulule.project;
+alter table ulule.contribution add foreign key(project_id) references ulule.project;

@@ -1,0 +1,35 @@
+services:
+  app:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    container_name: Ulule-test
+    ports:
+      - "${APP_PORT}:8080"
+      #    restart: always
+    environment:
+      DSN: "postgres://${DB_USER}:${DB_PASSWORD}@127.0.0.1:${DB_PORT}/ulule"
+      APP_PORT: ":${APP_PORT}"
+    depends_on:
+      - db
+    networks:
+      - main
+
+  db:
+    build:
+      context: ./script/db
+    restart: always
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ulule
+    healthcheck:
+      test: postgres.sh
+      interval: "5s"
+    ports:
+      - ${DB_HOST}:${DB_PORT}
+    networks:
+      - main
+
+networks:
+  main:

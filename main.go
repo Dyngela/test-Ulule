@@ -8,6 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
+	"os"
 )
 
 const port = ":8080"
@@ -30,7 +31,7 @@ func main() {
 	controller.ContributionController(router)
 	controller.VisitController(router)
 	controller.ProjectController(router)
-	err = router.Run(port)
-	//err = router.Run(os.Getenv("APP_PORT"))
+	//err = router.Run(port)
+	err = router.Run(os.Getenv("APP_PORT"))
 	exception.CheckErrors(err, "error while running")
 }
