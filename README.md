@@ -15,12 +15,15 @@ You can download source code directly to build your own image:
 ```shell
 git clone https://github.com/Dyngela/test-Ulule.git
 cd test-Ulule
-docker-compose up -d --build
 ```
 Now you need to create an actual database and its tables. You normally have everything needed. 
 First create a folder name dbinit in script/db, then just restore a dump of your data into a .sql file and copy and paste 
 it into script/db/dbinit and the application is ready. 
-You also eventually can change image parameter easily in the .env file as your liking.
+You also eventually can change image parameter easily in the .env file as your liking.  
+You can now build the image and everything should run:
+```shell
+docker-compose up -d --build
+```
 
 ## Test and documentation
 
