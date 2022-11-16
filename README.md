@@ -18,7 +18,8 @@ cd test-Ulule
 docker-compose up -d --build
 ```
 Now you need to create an actual database and its tables. You normally have everything needed. 
-Just restore a dump of your data into a .sql file and copy and paste it into script/db/dbinit and the application is ready. 
+First create a folder name dbinit in script/db, then just restore a dump of your data into a .sql file and copy and paste 
+it into script/db/dbinit and the application is ready. 
 You also eventually can change image parameter easily in the .env file as your liking.
 
 ## Test and documentation
@@ -28,11 +29,13 @@ For front-end developer a swagger page is available. Just launch the app with fo
 ```shell
 http://localhost:8080/swagger/index.html
 ```
-You can also import a postman collection if you want to test query already set with argument+: 
+You can also import a postman collection if you want to test query already set with argument: 
 
 ```shell
 https://www.getpostman.com/collections/450f206508a93fc85185
 ```
+
+The application is also summarily unit tested in main_test.go, each endpoint response is checked in failure and in success case.
 
 ## Libraries used
 
