@@ -13,4 +13,6 @@ type Project struct {
 	DateStart        pgtype.Date `db:"date_start"`
 	DateEnd          pgtype.Date `db:"date_end"`
 	DateEndExtraTime pgtype.Date `db:"date_end_extra_time"`
+	Type             string
+	Goal             float64
 }
